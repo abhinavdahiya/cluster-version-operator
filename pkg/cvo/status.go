@@ -158,7 +158,11 @@ func (optr *Operator) syncStatus(original, config *configv1.ClusterVersion, stat
 	// update the config with the latest available updates
 	if updated := optr.getAvailableUpdates().NeedsUpdate(config); updated != nil {
 		config = updated
-	} else if original == nil || original == config {
+	}
+	if updated := optr.getUpgradeable().NeedsUpdate(config); updated != nil {
+		config = updated
+	}
+	if original == nil || original == config {
 		original = config.DeepCopy()
 	}
 
